@@ -6,6 +6,7 @@ IP_REGEX = re.compile(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
 MD5_REGEX = re.compile(r'([a-fA-F\d]{32})')
 SHA1_REGEX = re.compile(r'([a-fA-F\d]{40})')
 SHA256_REGEX = re.compile(r'([a-fA-F\d]{64})')
+SS_DEEP_REGEX = re.compile(r'.{64,}')
 
 class ThreatMiner:
 
@@ -48,15 +49,19 @@ class ThreatMiner:
         else:
             raise InvalidTypeException('You must submit either a URL or a Domain.')
     
-    def get_related_samples(self, site):
-        if DOMAIN_REGEX.search(site):
-            response = self.session.get('https://api.threatminer.org/v2/domain.php?q={}&rt=4'.format(site)).json()
-            return response
-        elif IP_REGEX.search(site):
-            response = self.session.get('https://api.threatminer.org/v2/host.php?q={}&rt=4'.format(site)).json()
-            return response
-        else:
-            raise InvalidTypeException('You must submit either a URL or a Domain.')
+    def get_related_samples(self, ioc):
+        response = None
+        if DOMAIN_REGEX.search(ioc):
+            response = self.session.get('https://api.threatminer.org/v2/domain.php?q={}&rt=4'.format(ioc)).json()
+        elif IP_REGEX.search(ioc):
+            response = self.session.get('https://api.threatminer.org/v2/host.php?q={}&rt=4'.format(ioc)).json()
+        elif MD5_REGEX.search(ioc):
+            response = self.session.get('https://api.threatminer.org/v2/imphash.php?q={}&rt=1'.format(ioc)).json()
+        elif SS_DEEP_REGEX.search(ioc) and ':' in ioc:
+            response = self.session.get('https://api.threatminer.org/v2/ssdeep.php?q={}&rt=1'.format(ioc)).json()
+        if response and response['status_code'] == '404':
+            response = self.session.get('https://api.threatminer.org/v2/av.php?q={}&rt=1'.format(ioc)).json()
+        return response
     
     def get_subdomains(self, site):
         if DOMAIN_REGEX.search(site):
@@ -72,9 +77,11 @@ class ThreatMiner:
         elif IP_REGEX.search(ioc):
             response = self.session.get('https://api.threatminer.org/v2/host.php?q={}&rt=6'.format(ioc)).json()
             return response
-        elif MD5_REGEX.search(ioc) or SHA1_REGEX.search(ioc) or SHA256_REGEX.search(ioc):
+        elif MD5_REGEX.search(ioc) or SHA1_REGEX.search(ioc) or (SHA256_REGEX.search(ioc) and ':' not in ioc):
             response = self.session.get('https://api.threatminer.org/v2/sample.php?q={}&rt=7'.format(ioc)).json()
             return response
+        elif SS_DEEP_REGEX.search(ioc) and ':' in ioc:
+            response = self.session.get('https://api.threatminer.org/v2/ssdeep.php?q={}&rt=2'.format(ioc)).json()
         else:
             raise InvalidTypeException('You must submit a Domain, URL, MD5, SHA1, SHA256.')
     
@@ -138,11 +145,22 @@ class ThreatMiner:
             response['registry_changes'] = registry_changes['results'][0] if registry_changes['results'] else None
             response['av_detections'] = av_detections['results'][0] if av_detections['results'] else None
             response['reports'] = reports['results'][0] if reports['results'] else None
-            http_traffic = self.get_http_traffic(ioc)
 
             return response
         else:
             raise InvalidTypeException('You must submit a MD5, SHA1, or SHA256 hash.')
+    
+    def get_samples(self, ioc):
+        print(ioc)
+        if MD5_REGEX.search(ioc):
+            response = self.session.get('https://api.threatminer.org/v2/imphash.php?q={}&rt=1'.format(ioc)).json()
+        elif SS_DEEP_REGEX.search(ioc):
+            print('ssdeep')
+            response = self.session.get('https://api.threatminer.org/v2/ssdeep.php?q={}&rt=1'.format(ioc)).json()
+        else:
+            response = self.session.get('https://api.threatminer.org/v2/av.php?q={}&rt=1'.format(ioc)).json()
+        return response
+
 
 
 class InvalidTypeException(Exception):
