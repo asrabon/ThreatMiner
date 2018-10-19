@@ -1,3 +1,4 @@
+from datetime import datetime
 import re
 from requests import session
 
@@ -63,6 +64,13 @@ class ThreatMiner:
             response = self.session.get('https://api.threatminer.org/v2/av.php?q={}&rt=1'.format(ioc)).json()
         return response
     
+    def get_domains(self, email):
+        if SHA1_REGEX.search(email):
+            response = self.session.get('https://api.threatminer.org/v2/email.php?q={}'.format(email)).json()
+            return response
+        else:
+            raise InvalidTypeException('You must submit a SHA-1 has of an email.')
+    
     def get_subdomains(self, site):
         if DOMAIN_REGEX.search(site):
             response = self.session.get('https://api.threatminer.org/v2/domain.php?q={}&rt=5'.format(site)).json()
@@ -109,6 +117,8 @@ class ThreatMiner:
     def get_hosts(self, ioc):
         if MD5_REGEX.search(ioc) or SHA1_REGEX.search(ioc) or SHA256_REGEX.search(ioc):
             response = self.session.get('https://api.threatminer.org/v2/sample.php?q={}&rt=3'.format(ioc)).json()
+            if response['status_code'] == '404':
+                response = self.session.get('https://api.threatminer.org/v2/ssl.php?q={}&rt=1'.format(ioc)).json()
             return response
         else:
             raise InvalidTypeException('You must submit a MD5, SHA1, or SHA256 hash.')    
@@ -151,7 +161,6 @@ class ThreatMiner:
             raise InvalidTypeException('You must submit a MD5, SHA1, or SHA256 hash.')
     
     def get_samples(self, ioc):
-        print(ioc)
         if MD5_REGEX.search(ioc):
             response = self.session.get('https://api.threatminer.org/v2/imphash.php?q={}&rt=1'.format(ioc)).json()
         elif SS_DEEP_REGEX.search(ioc):
@@ -160,7 +169,32 @@ class ThreatMiner:
         else:
             response = self.session.get('https://api.threatminer.org/v2/av.php?q={}&rt=1'.format(ioc)).json()
         return response
+    
+    def get_apt_domains(self, name, year):
+        response = self.session.get('https://api.threatminer.org/v2/report.php?q={}&y={}&rt=1'.format(name, year)).json()
+        return response
+    
+    def get_apt_hosts(self, name, year):
+        response = self.session.get('https://api.threatminer.org/v2/report.php?q={}&y={}&rt=2'.format(name, year)).json()
+        return response
 
+    def get_apt_emails(self, name, year):
+        response = self.session.get('https://api.threatminer.org/v2/report.php?q={}&y={}&rt=3'.format(name, year)).json()
+        return response
+
+    def get_apt_hashes(self, name, year):
+        response = self.session.get('https://api.threatminer.org/v2/report.php?q={}&y={}&rt=4'.format(name, year)).json()
+        return response
+    
+    def search_apt_notes(self):
+        pass
+
+    def get_all_apt_notes(self):
+        apt_notes = []
+        for i in range(2008, datetime.now().year+1):
+            response = self.session.get('https://api.threatminer.org/v2/reports.php?q={}&rt=2'.format(i)).json()
+            for apt_note in response['results']:
+                apt_notes.append(apt_note)
 
 
 class InvalidTypeException(Exception):

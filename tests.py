@@ -15,6 +15,9 @@ def main():
         test_get_mutants(tm)
         test_get_av_detections(tm)
         #test_get_sample_info(tm)
+        test_get_domains(tm)
+        test_apt_notes(tm)
+        test_get_all_apt_notes(tm)
 
 
 def test_who_is(tm):
@@ -94,6 +97,26 @@ def test_get_av_detections(tm):
 def test_get_sample_info(tm):
     response = tm.get_sample_info('e6ff1bf0821f00384cdd25efb9b1cc09')
     print(response)
+
+
+def test_get_domains(tm):
+    response = tm.get_domains('7bf5721bfa009479c33f3c3cf4ea5392200f030e')
+    assert response['status_code'] == '200'
+
+
+def test_apt_notes(tm):
+    response = tm.get_apt_domains('C5_APT_C2InTheFifthDomain.pdf', 2013)
+    assert response['status_code'] == '200'
+    response = tm.get_apt_emails('C5_APT_C2InTheFifthDomain.pdf', 2013)
+    assert response['status_code'] == '200'
+    response = tm.get_apt_hashes('C5_APT_C2InTheFifthDomain.pdf', 2013)
+    assert response['status_code'] == '200'
+    response = tm.get_apt_hosts('C5_APT_C2InTheFifthDomain.pdf', 2013)
+    assert response['status_code'] == '200'
+
+
+def test_get_all_apt_notes(tm):
+    response = tm.get_all_apt_notes()
 
 
 if __name__ == '__main__':
