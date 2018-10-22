@@ -17,7 +17,7 @@ def main():
         #test_get_sample_info(tm)
         test_get_domains(tm)
         test_apt_notes(tm)
-        test_get_all_apt_notes(tm)
+        #test_get_all_apt_notes(tm)
 
 
 def test_who_is(tm):
@@ -113,11 +113,13 @@ def test_apt_notes(tm):
     assert response['status_code'] == '200'
     response = tm.get_apt_hosts('C5_APT_C2InTheFifthDomain.pdf', 2013)
     assert response['status_code'] == '200'
+    response = tm.search_apt_notes('sofacy')
+    assert response['status_code'] == '200'
 
 
 def test_get_all_apt_notes(tm):
     response = tm.get_all_apt_notes()
-
+    response = tm.get_all_apt_iocs()
 
 if __name__ == '__main__':
     main()

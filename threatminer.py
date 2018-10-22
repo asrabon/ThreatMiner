@@ -1,12 +1,23 @@
+# Standard Python Libraries
 from datetime import datetime
 import re
 from requests import session
+from urllib3.exceptions import DependencyWarning
+import warnings
 
+warnings.filterwarnings('ignore', category=DependencyWarning)
+
+# regex to check if an input is a domain
 DOMAIN_REGEX = re.compile(r'^([A-Za-z0-9]\.|[A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9]\.){1,3}[A-Za-z]{2,6}$')
+# regex to check if an input is an ip address
 IP_REGEX = re.compile(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
+# regex to check if an input is a MD5 hash
 MD5_REGEX = re.compile(r'([a-fA-F\d]{32})')
+# regex to check if an input is a SHA-1 hash
 SHA1_REGEX = re.compile(r'([a-fA-F\d]{40})')
+# regex to check if an input is a SHA-256 hash
 SHA256_REGEX = re.compile(r'([a-fA-F\d]{64})')
+# regex to check if an input is a SSDEEP hash
 SS_DEEP_REGEX = re.compile(r'.{64,}')
 
 class ThreatMiner:
@@ -186,8 +197,9 @@ class ThreatMiner:
         response = self.session.get('https://api.threatminer.org/v2/report.php?q={}&y={}&rt=4'.format(name, year)).json()
         return response
     
-    def search_apt_notes(self):
-        pass
+    def search_apt_notes(self, search_term):
+        response = self.session.get('https://api.threatminer.org/v2/reports.php?q={}&rt=1'.format(search_term)).json()
+        return response
 
     def get_all_apt_notes(self):
         apt_notes = []
@@ -195,6 +207,21 @@ class ThreatMiner:
             response = self.session.get('https://api.threatminer.org/v2/reports.php?q={}&rt=2'.format(i)).json()
             for apt_note in response['results']:
                 apt_notes.append(apt_note)
+        return apt_notes
+    
+    def get_all_apt_iocs(self):
+        apt_notes = self.get_all_apt_notes()
+        apt_iocs = {'domains': [],
+                    'hosts': [],
+                    'emails': [],
+                    'hashes': []}
+        for note in apt_notes:
+            apt_iocs['domains'].extend(self.get_apt_domains(note['filename'], note['year'])['results'])
+            apt_iocs['hosts'].extend(self.get_apt_hosts(note['filename'], note['year'])['results'])
+            apt_iocs['emails'].extend(self.get_apt_emails(note['filename'], note['year'])['results'])
+            apt_iocs['hashes'].extend(self.get_apt_hashes(note['filename'], note['year'])['results'])
+        print(apt_iocs)
+        return apt_iocs
 
 
 class InvalidTypeException(Exception):
