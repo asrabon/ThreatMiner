@@ -220,7 +220,6 @@ class ThreatMiner:
             apt_iocs['hosts'].extend(self.get_apt_hosts(note['filename'], note['year'])['results'])
             apt_iocs['emails'].extend(self.get_apt_emails(note['filename'], note['year'])['results'])
             apt_iocs['hashes'].extend(self.get_apt_hashes(note['filename'], note['year'])['results'])
-        print(apt_iocs)
         return apt_iocs
 
 
