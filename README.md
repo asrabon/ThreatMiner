@@ -22,7 +22,7 @@ tm = ThreatMiner()
 
 <br>
 
-<details><summary>Getting File Metadata (Input: MD5, SHA-1, or SHA-256)</summary>
+<details><summary>Getting Metadata Associated With a File (Input: MD5, SHA-1, or SHA-256)</summary>
 
 * Code
 
@@ -55,4 +55,234 @@ tm = ThreatMiner()
     ]
     }
     ```
+</details>
+
+<br>
+
+<details><summary>Getting HTTP Traffic Associated With a File (Input: MD5, SHA-1, or SHA-256)</summary>
+
+* Code
+
+    ```
+    response = tm.get_http_traffic('e6ff1bf0821f00384cdd25efb9b1cc09')
+    print(response)
+    ```
+
+* Output
+    ```
+    {
+    "status_code": "200",
+    "status_message": "Results found.",
+    "results": [
+        {
+        "http_traffic": [
+            {
+            "domain": "www.installaware.com",
+            "source": "Hybrid-analysis",
+            "url": "/",
+            "ip": "209.222.0.52",
+            "method": "GET",
+            "raw": "GET / HTTP/1.1\nAccept: */*\nAccept-Language: en-us\nUser-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)\nAccept-Encoding: gzip, deflate\nHost: www.installaware.com\nConnection: Keep-Alive",
+            "user_agent": "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)",
+            "port": ""
+            },
+            {
+            "domain": "www.installaware.com",
+            "source": "Hybrid-analysis",
+            "url": "/installaware/2011/style.css",
+            "ip": "209.222.0.52",
+            "method": "GET",
+            "raw": "GET /installaware/2011/style.css HTTP/1.1\nAccept: */*\nReferer: http://www.installaware.com/\nAccept-Language: en-US\nUser-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)\nAccept-Encoding: gzip, deflate\nHost: www.installaware.com\nConnection: Keep-Alive",
+            "user_agent": "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)",
+            "port": ""
+            }
+        ]
+        }]
+    }
+    ```
+
+</details>
+
+<br>
+
+<details><summary>Getting Hosts Associated With a File (Input: MD5, SHA-1, or SHA-256)</summary>
+
+* Code
+
+    ```
+    response = tm.get_hosts('e6ff1bf0821f00384cdd25efb9b1cc09')
+    print(response)
+    ```
+
+* Output
+    ```
+    {
+        "status_code": "200",
+        "status_message": "Results found.",
+        "results": [
+            {
+            "domains": [
+                {
+                "ip": "173.194.192.100",
+                "domain": "www.google-analytics.com"
+                },
+                {
+                "ip": "173.194.192.97",
+                "domain": "www.googletagmanager.com"
+                },
+                {
+                "ip": "216.58.216.106",
+                "domain": "ajax.googleapis.com"
+                },
+                {
+                "ip": "209.222.0.52",
+                "domain": "www.installaware.com"
+                },
+                {
+                "ip": "72.32.150.153",
+                "domain": "installaware.app12.hubspot.com"
+                },
+                {
+                "ip": "172.230.212.74",
+                "domain": "js.hubspot.com"
+                },
+                {
+                "ip": "74.125.135.156",
+                "domain": "stats.g.doubleclick.net"
+                }
+            ],
+            "hosts": [
+                "209.222.0.52",
+                "72.32.150.153"
+            ]
+            }
+        ]
+    }
+    ```
+
+</details>
+
+<br>
+
+<details><summary>Getting Mutants Associated With a File (Input: MD5, SHA-1, or SHA-256)</summary>
+
+* Code
+
+    ```
+    response = tm.get_mutants('e6ff1bf0821f00384cdd25efb9b1cc09')
+    print(response)
+    ```
+
+* Output
+    ```
+    {
+        "status_code": "200",
+        "status_message": "Results found.",
+        "results": [
+            {
+            "mutants": [
+                "\"\\Sessions\\1\\BaseNamedObjects\\Local\\MidiMapper_modLongMessage_RefCnt\"",
+                "\"\\Sessions\\1\\BaseNamedObjects\\Local\\!IETld!Mutex\""
+            ]
+            }
+        ]
+    }
+    ```
+
+</details>
+
+<br>
+
+<details><summary>Getting AV Detections Associated With a File (Input: MD5, SHA-1, or SHA-256)</summary>
+
+* Code
+
+    ```
+    response = tm.get_av_detections('e6ff1bf0821f00384cdd25efb9b1cc09')
+    print(response)
+    ```
+
+* Output
+    ```
+    {
+        "status_code": "200",
+        "status_message": "Results found.",
+        "results": [
+            {
+            "av_detections": [
+                {
+                "detection": "Trojan.Generic.8175716",
+                "av": "MicroWorld-eScan"
+                },
+                {
+                "detection": "Trojan-Spy.Win32.Hoardy!O",
+                "av": "CMC"
+                },
+                {
+                "detection": "TrojanAPT.Infostealer.H4",
+                "av": "CAT-QuickHeal"
+                },
+                {
+                "detection": "Spyware.Infostealer.Flea.APT",
+                "av": "ALYac"
+                },
+                ...
+                {
+                "detection": "HEUR/Malware.QVM09.Gen",
+                "av": "Qihoo-360"
+                }
+            ]
+            }
+        ]
+    }
+    ```
+
+</details>
+
+<br>
+
+<details><summary>Getting Associated Reports (Input: MD5, SHA-1, SHA-256, SSDeep, IP, Domain, URL)</summary>
+
+* Code
+
+    ```
+    response = tm.get_av_detections('e6ff1bf0821f00384cdd25efb9b1cc09')
+    print(response)
+    ```
+
+* Output
+    ```
+    {
+        "status_code": "200",
+        "status_message": "Results found.",
+        "results": [
+            {
+            "av_detections": [
+                {
+                "detection": "Trojan.Generic.8175716",
+                "av": "MicroWorld-eScan"
+                },
+                {
+                "detection": "Trojan-Spy.Win32.Hoardy!O",
+                "av": "CMC"
+                },
+                {
+                "detection": "TrojanAPT.Infostealer.H4",
+                "av": "CAT-QuickHeal"
+                },
+                {
+                "detection": "Spyware.Infostealer.Flea.APT",
+                "av": "ALYac"
+                },
+                ...
+                {
+                "detection": "HEUR/Malware.QVM09.Gen",
+                "av": "Qihoo-360"
+                }
+            ]
+            }
+        ]
+    }
+    ```
+
 </details>

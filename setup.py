@@ -9,7 +9,7 @@ setup(name='threatminer',
       license='GNU General Public License v3.0',
       packages=['threatminer'],
       install_requires=[
-          'urllib3',
+          'urllib3>=1.24',
           'requests'
       ],
       zip_safe=False)
