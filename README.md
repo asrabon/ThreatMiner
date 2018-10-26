@@ -246,7 +246,7 @@ tm = ThreatMiner()
 * Code
 
     ```
-    response = tm.get_av_detections('e6ff1bf0821f00384cdd25efb9b1cc09')
+    response = tm.get_report('vwrm.com')
     print(response)
     ```
 
@@ -257,30 +257,223 @@ tm = ThreatMiner()
         "status_message": "Results found.",
         "results": [
             {
-            "av_detections": [
-                {
-                "detection": "Trojan.Generic.8175716",
-                "av": "MicroWorld-eScan"
-                },
-                {
-                "detection": "Trojan-Spy.Win32.Hoardy!O",
-                "av": "CMC"
-                },
-                {
-                "detection": "TrojanAPT.Infostealer.H4",
-                "av": "CAT-QuickHeal"
-                },
-                {
-                "detection": "Spyware.Infostealer.Flea.APT",
-                "av": "ALYac"
-                },
-                ...
-                {
-                "detection": "HEUR/Malware.QVM09.Gen",
-                "av": "Qihoo-360"
-                }
-            ]
+            "filename": "comment_crew_indicators_of_compromise.pdf",
+            "year": "2013",
+            "URL": "https://www.threatminer.org/report.php?q=comment_crew_indicators_of_compromise.pdf&y=2013"
             }
+        ]
+    }
+    ```
+
+</details>
+
+<br>
+
+<details><summary>Getting Associated Samples (Input: IP, Domain)</summary>
+
+* Code
+
+    ```
+    response = tm.get_related_samples('216.58.213.110')
+    print(response)
+    ```
+
+* Output
+    ```
+    {
+        "status_code": "200",
+        "status_message": "Results found.",
+        "results": [
+            "dd0418c01b7196e967a63fedda70eaf6de4fffb5296a24b9ec13f7a09c2f7bc1",
+            "abf736e1a8e0508b6dd840b012d4231cf13f8b48c2dcb3ed18ce92a59dba7109",
+            "66e2a31fe008a463431b9ef0ffdf1de1706626d30776de2ec861d11e498e023c",
+            "3cb694866d37274dcc0e46aaa20a45d55f4c8de6798e1226898776ea202162bf",
+            "cdb4f8bc40e72cc3cc9ec9b0636f36a01ce38bdc7e0cf1e1df6adfdf6e7d71ee",
+            "c40c320267f90b4f66dfff2b10db450d12d88cba7c488c09fbe55360742c828e",
+            "694f36b9d133e602c946caa49c42c3cf77d6f94405aba8924f9b6a21a42fc12a",
+            "6dc6249419f0e10aaacb513f9411a73f9da2c694727cc53c1883f176c5d5811f",
+            "94a2a98ca3e9fd5d48ddc86abf19979b99c31370dbbf286a709ad13829dc35ea",
+            "914fc30ab1ae8920812bf87037e18ef06eed5f3327e9aa43d9e9e933455c9a3c",
+            "b9a6350fb3ff6bc1a567be2689b4763245214782fd09a39a1dced29ef63ae447",
+            "161897e4f2447cc01e2efaa58d8fbfb09eeee02902a2ef666bdf8239c13cd590"
+        ]
+    }
+    ```
+
+</details>
+
+<br>
+
+<details><summary>Get "Who Is" Information (Input: IP, Domain)</summary>
+
+* Code
+
+    ```
+    response = tm.who_is('vwrm.com')
+    print(response)
+    ```
+
+* Output
+    ```
+    {
+        "status_code": "200",
+        "status_message": "Results found.",
+        "results": [
+            {
+            "domain": "vwrm.com",
+            "is_subdomain": false,
+            "root_domain": "",
+            "whois": {
+                "updated_date": "2012-03-26 12:04:11",
+                "whois_md5": "f8c433f165d39ce655c18e91d685cca0",
+                "billing_info": {
+                "Organization": " Aliant Telecom",
+                "City": " Saint John",
+                "State": " New Brunswick",
+                "Country": " Canada",
+                "Postal_Code": " E2L4K2"
+                },
+                "registrant_info": {
+                "City": " Kentville",
+                "Country": " Canada",
+                "State": " Nova Scotia",
+                "Street": " PO Box 895",
+                "Postal_Code": " B4N4H8",
+                "Organization": " Valley Waste Resource Management"
+                },
+                "creation_date": "1999-04-01 05:00:00",
+                "whois_server": "whois.register.com",
+                "emails": {
+                "admin": "",
+                "tech": "",
+                "registrant": "",
+                "billing": ""
+                },
+                "tech_info": {
+                "Organization": " Aliant Telecom",
+                "City": " Saint John",
+                "State": " New Brunswick",
+                "Country": " Canada",
+                "Postal_Code": " E2L4K2"
+                },
+                "admin_info": {
+                "Organization": " Aliant Telecom",
+                "City": " Saint John",
+                "State": " New Brunswick",
+                "Country": " Canada",
+                "Postal_Code": " E2L4K2"
+                },
+                "nameservers": [
+                "onyx.nbnet.nb.ca",
+                "opal.nbnet.nb.ca"
+                ],
+                "expiration_date": "2017-04-01 04:00:00",
+                "email_hashes": {
+                "admin": "",
+                "tech": "",
+                "registrant": "",
+                "billing": ""
+                },
+                "registrar": "register.com, inc.",
+                "date_checked": "2016-11-22 14:10:14",
+                "reg_info": {
+                "Organization": " Aliant Telecom",
+                "City": " Saint John",
+                "State": " New Brunswick",
+                "Country": " Canada",
+                "Postal_Code": " E2L4K2"
+                }
+            },
+            "last_updated": "2016-01-16 00:00:00"
+            }
+        ]
+    }
+    ```
+
+</details>
+
+<br>
+
+<details><summary>Getting DNS Info (Input: IP, Domain)</summary>
+
+* Code
+
+    ```
+    response = tm.passive_dns('vwrm.com')
+    print(response)
+    ```
+
+* Output
+    ```
+    {
+        "status_code": "200",
+        "status_message": "Results found.",
+        "results": [
+            {
+            "ip": "209.29.221.235",
+            "first_seen": "2013-09-19 00:00:00",
+            "last_seen": "2016-02-01 09:41:15"
+            }
+        ]
+    }
+    ```
+
+</details>
+
+<br>
+
+<details><summary>Getting All URIs (Input: Domain)</summary>
+
+* Code
+
+    ```
+    response = tm.get_uris('vwrm.com')
+    print(response)
+    ```
+
+* Output
+    ```
+    {
+        "status_code": "200",
+        "status_message": "Results found.",
+        "results": [
+            {
+            "domain": "vwrm.com",
+            "ip": "",
+            "uri": "http://vwrm.com/maps/iexplorer.zip",
+            "last_seen": "2014-07-17 16:51:28"
+            },
+            {
+            "domain": "vwrm.com",
+            "ip": "",
+            "uri": "http://vwrm.com/",
+            "last_seen": "2013-04-23 18:48:53"
+            }
+        ]
+    }
+    ```
+
+</details>
+
+<br>
+
+<details><summary>Getting Subdomains (Input: Domain)</summary>
+
+* Code
+
+    ```
+    response = tm.get_subdomains('vwrm.com')
+    print(response)
+    ```
+
+* Output
+    ```
+    {
+        "status_code": "200",
+        "status_message": "Results found.",
+        "results": [
+            "www.vwrm.com",
+            "mail.vwrm.com"
         ]
     }
     ```
